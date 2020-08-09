@@ -1,19 +1,24 @@
-import React, { useEffect, memo } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import classes from './Cockpit.css';
+import AuthContext from '../Context/auth-context';
 
-const cockpit = (props) => {
+const cockpit = props => {
+    const toggleButtonRef = useRef(null);
+    const authContext = useContext(AuthContext);
+
     useEffect(() => {
         console.log('[Cockpit.js] useEffect');
+        toggleButtonRef.current.click();
         return () => {
-            console.log('[Cockpit.js] useEffect unload');
+            console.log('[Cockpit.js] cleanup work in useEffect');
         }
     }, []);
-useEffect(() => {
-    console.log('[Cockpit.js] 2nd useEffect')
-    return () => {
-        console.log('[Cockpit.js] 2nd useEffect unload');
-    }
-})
+    useEffect(() => {
+        console.log('[Cockpit.js] 2nd useEffect')
+        return () => {
+            console.log('[Cockpit.js] cleanup work in 2nd useEffect');
+        }
+    });
 
     const assignedClasses = [];
     
@@ -31,9 +36,10 @@ useEffect(() => {
         <div className={classes.Cockpit}>
             <h1>{props.title}</h1>
             <p className={assignedClasses.join(' ')}>This is really working!</p>
-            <button className={btnClass} onClick={props.clicked}>Toggle Persons</button>
+            <button ref={toggleButtonRef} className={btnClass} onClick={props.clicked}>Toggle Persons</button>
+            <button onClick={authContext.login}>Log In</button>
         </div>
     );
 };
 
-export default memo(cockpit);
+export default cockpit;
